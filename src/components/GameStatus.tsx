@@ -1,5 +1,5 @@
 import type { Progress } from '../chess/gameTrainer'
-import type { Feedback } from '../hooks/useTrainer'
+import type { Feedback } from '../hooks/useTrainingSession'
 
 interface GameStatusProps {
   progress: Progress | null

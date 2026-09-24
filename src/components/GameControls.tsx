@@ -1,26 +1,24 @@
 interface GameControlsProps {
-  hasGame: boolean
   canHint: boolean
   canUndo: boolean
+  canRestart: boolean
   showHistory: boolean
   onHint: () => void
   onUndo: () => void
   onRestart: () => void
   onFlip: () => void
   onToggleHistory: () => void
-  onLoadNew: () => void
 }
 
 export function GameControls(props: GameControlsProps) {
-  const { hasGame, canHint, canUndo, showHistory } = props
+  const { canHint, canUndo, canRestart, showHistory } = props
   return (
     <div className="controls">
       <ControlButton label="Hint" shortcut="H" onClick={props.onHint} disabled={!canHint} />
       <ControlButton label="Undo" shortcut="U" onClick={props.onUndo} disabled={!canUndo} />
-      <ControlButton label="Restart" shortcut="R" onClick={props.onRestart} disabled={!hasGame} />
+      <ControlButton label="Restart game" shortcut="R" onClick={props.onRestart} disabled={!canRestart} />
       <ControlButton label="Flip" shortcut="F" onClick={props.onFlip} />
       <ControlButton label={showHistory ? 'Hide history' : 'Show history'} onClick={props.onToggleHistory} />
-      <ControlButton label="Load new game" onClick={props.onLoadNew} />
     </div>
   )
 }

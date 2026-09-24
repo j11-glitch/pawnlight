@@ -132,23 +132,45 @@ export function isPromotionMove(position: Chess, from: string, to: string): bool
     .some((move) => move.to === to && move.promotion !== undefined)
 }
 
+export interface NumberedPly {
+  /** Index of the position after this move (1 = after the first move). */
+  readonly ply: number
+  readonly san: string
+}
+
+export interface NumberedMove {
+  readonly number: number
+  readonly white?: NumberedPly
+  readonly black?: NumberedPly
+}
+
+/**
+ * Groups SAN moves into numbered pairs, handling a start position where Black moves first.
+ */
+export function numberMoves(startFen: string, moves: readonly string[]): NumberedMove[] {
+  const start = new Chess(startFen)
+  const result: NumberedMove[] = []
+  let number = start.moveNumber()
+  let i = 0
+  if (start.turn() === 'b' && moves.length > 0) {
+    result.push({ number, black: { ply: 1, san: moves[0] } })
+    number++
+    i = 1
+  }
+  for (; i < moves.length; i += 2) {
+    const black = moves[i + 1] === undefined ? undefined : { ply: i + 2, san: moves[i + 1] }
+    result.push({ number, white: { ply: i + 1, san: moves[i] }, black })
+    number++
+  }
+  return result
+}
+
 /**
  * Formats SAN moves as numbered lines: ["e4", "e5", "Nf3"] gives ["1. e4 e5", "2. Nf3"].
  * Handles a starting position where Black moves first ("5... Nf6").
  */
 export function formatMoveList(startFen: string, moves: readonly string[]): string[] {
-  const start = new Chess(startFen)
-  let number = start.moveNumber()
-  const lines: string[] = []
-  let i = 0
-  if (start.turn() === 'b' && moves.length > 0) {
-    lines.push(`${number}... ${moves[0]}`)
-    number++
-    i = 1
-  }
-  for (; i < moves.length; i += 2) {
-    lines.push([`${number}.`, moves[i], moves[i + 1]].filter(Boolean).join(' '))
-    number++
-  }
-  return lines
+  return numberMoves(startFen, moves).map(({ number, white, black }) =>
+    white ? [`${number}.`, white.san, black?.san].filter(Boolean).join(' ') : `${number}... ${black?.san}`,
+  )
 }
