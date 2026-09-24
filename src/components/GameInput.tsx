@@ -1,10 +1,9 @@
-import { useState, type FormEvent, type RefObject } from 'react'
+import { useState, type FormEvent } from 'react'
 
 interface GameInputProps {
-  textareaRef: RefObject<HTMLTextAreaElement | null>
   /** Returns an error message, or null when the game loaded. */
   onLoad: (text: string) => string | null
-  onCancel?: () => void
+  submitLabel?: string
 }
 
 const PLACEHOLDER = `e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O Be7
@@ -14,11 +13,8 @@ or a PGN:
 [Event "Example"]
 1. e4 e5 2. Nf3 Nc6 3. Bb5 a6`
 
-/**
- * The input starts empty and is hidden once a game is loaded,
- * so the full move list is never on screen while training.
- */
-export function GameInput({ textareaRef, onLoad, onCancel }: GameInputProps) {
+/** Clears itself after a successful load, so the full move list is not left on screen. */
+export function GameInput({ onLoad, submitLabel = 'Load game' }: GameInputProps) {
   const [text, setText] = useState('')
   const [error, setError] = useState<string | null>(null)
 
@@ -34,7 +30,6 @@ export function GameInput({ textareaRef, onLoad, onCancel }: GameInputProps) {
       <label htmlFor="game-input">Move sequence / PGN</label>
       <textarea
         id="game-input"
-        ref={textareaRef}
         value={text}
         onChange={(event) => setText(event.target.value)}
         placeholder={PLACEHOLDER}
@@ -50,13 +45,8 @@ export function GameInput({ textareaRef, onLoad, onCancel }: GameInputProps) {
       )}
       <div className="input__actions">
         <button type="submit" className="primary" disabled={!text.trim()}>
-          Load game
+          {submitLabel}
         </button>
-        {onCancel && (
-          <button type="button" onClick={onCancel}>
-            Cancel
-          </button>
-        )}
       </div>
     </form>
   )

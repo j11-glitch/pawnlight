@@ -1,101 +1,123 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { getPlayedMoves } from './chess/gameTrainer'
+import type { SetGame } from './chess/trainingSet'
+import { Celebration } from './components/Celebration'
 import { GameControls } from './components/GameControls'
-import { GameInput } from './components/GameInput'
 import { GameStatus } from './components/GameStatus'
+import { LibraryView } from './components/LibraryView'
 import { MoveHistory } from './components/MoveHistory'
+import { SetOverview } from './components/SetOverview'
 import { TrainerBoard } from './components/TrainerBoard'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
-import { useTrainer } from './hooks/useTrainer'
+import { useTrainingSession } from './hooks/useTrainingSession'
+import { library } from './library'
+
+type View = 'library' | 'train'
+
+const NO_SHORTCUTS = {}
 
 export default function App() {
-  const game = useTrainer()
-  const { trainer, position, progress } = game
-  const [inputOpen, setInputOpen] = useState(trainer === null)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const session = useTrainingSession()
+  const { set, trainer, position, progress } = session
+  const [view, setView] = useState<View>(set ? 'train' : 'library')
 
-  useEffect(() => {
-    if (inputOpen && trainer) textareaRef.current?.focus()
-  }, [inputOpen, trainer])
-
-  const openInput = useCallback(() => {
-    setInputOpen(true)
-    textareaRef.current?.focus()
-  }, [])
-
-  const { loadGame } = game
-  const handleLoad = useCallback(
-    (text: string) => {
-      const error = loadGame(text)
-      if (!error) setInputOpen(false)
-      return error
+  const { startSet, passed } = session
+  const handleStart = useCallback(
+    (games: readonly SetGame[], shuffle: boolean) => {
+      if (set && !passed && !window.confirm('Replace your current training set? Its progress will be lost.')) return
+      startSet(games, shuffle)
+      setView('train')
     },
-    [loadGame],
+    [set, passed, startSet],
   )
 
-  const shortcuts = useMemo(
-    () => ({ h: game.showHint, r: game.restart, u: game.undo, f: game.flip }),
-    [game.showHint, game.restart, game.undo, game.flip],
+  const trainShortcuts = useMemo(
+    () => ({ h: session.showHint, r: session.restartGame, u: session.undo, f: session.flip, n: session.nextGame }),
+    [session.showHint, session.restartGame, session.undo, session.flip, session.nextGame],
   )
-  useKeyboardShortcuts(shortcuts)
+  // Shortcuts must not act on the (hidden) training board while browsing the library.
+  useKeyboardShortcuts(view === 'train' ? trainShortcuts : NO_SHORTCUTS)
 
   const completed = progress?.completed ?? false
 
   return (
     <div className="app">
       <header className="app__header">
-        <h1>Chess Move Trainer</h1>
-        <p className="muted">Recover a game move by move. Wrong moves are taken back; the answer stays hidden.</p>
+        <div>
+          <h1>Chess Move Trainer</h1>
+          <p className="muted">Recover games move by move. Wrong moves are taken back; the answer stays hidden.</p>
+        </div>
+        <nav className="tabs" aria-label="Views">
+          <button type="button" aria-current={view === 'library'} onClick={() => setView('library')}>
+            Library
+          </button>
+          <button type="button" aria-current={view === 'train'} onClick={() => setView('train')} disabled={!set}>
+            Training
+          </button>
+        </nav>
       </header>
 
-      <main className="app__main">
-        <TrainerBoard
-          position={position}
-          orientation={game.orientation}
-          disabled={!trainer || completed}
-          onMove={game.makeMove}
-        />
-
-        <aside className="panel">
-          <GameStatus
-            progress={progress}
-            feedback={game.feedback}
-            hint={game.hint}
-            inCheck={position.inCheck()}
-            isCheckmate={position.isCheckmate()}
+      {view === 'library' || !set || !trainer ? (
+        <LibraryView categories={library} orientation={session.orientation} onStart={handleStart} />
+      ) : (
+        <main className="app__main">
+          <TrainerBoard
+            position={position}
+            orientation={session.orientation}
+            disabled={completed}
+            onMove={session.makeMove}
           />
 
-          <GameControls
-            hasGame={trainer !== null}
-            canHint={trainer !== null && !completed}
-            canUndo={(trainer?.currentMoveIndex ?? 0) > 0}
-            showHistory={game.showHistory}
-            onHint={game.showHint}
-            onUndo={game.undo}
-            onRestart={game.restart}
-            onFlip={game.flip}
-            onToggleHistory={game.toggleHistory}
-            onLoadNew={openInput}
-          />
-
-          {trainer && game.showHistory && (
-            <MoveHistory startFen={trainer.startFen} playedMoves={getPlayedMoves(trainer)} />
-          )}
-
-          {inputOpen ? (
-            <GameInput
-              textareaRef={textareaRef}
-              onLoad={handleLoad}
-              onCancel={trainer ? () => setInputOpen(false) : undefined}
+          <aside className="panel">
+            <SetOverview
+              set={set}
+              passed={passed}
+              canAdvance={session.canAdvance}
+              onNext={session.nextGame}
+              onShowResults={session.openResults}
             />
-          ) : (
+
+            <GameStatus
+              progress={progress}
+              feedback={session.feedback}
+              hint={session.hint}
+              inCheck={position.inCheck()}
+              isCheckmate={position.isCheckmate()}
+            />
+
+            <GameControls
+              canHint={!completed}
+              canUndo={trainer.currentMoveIndex > 0}
+              canRestart
+              showHistory={session.showHistory}
+              onHint={session.showHint}
+              onUndo={session.undo}
+              onRestart={session.restartGame}
+              onFlip={session.flip}
+              onToggleHistory={session.toggleHistory}
+            />
+
+            {session.showHistory && <MoveHistory startFen={trainer.startFen} playedMoves={getPlayedMoves(trainer)} />}
+
             <p className="muted small shortcuts">
-              Shortcuts: <kbd>H</kbd> hint, <kbd>U</kbd> undo, <kbd>R</kbd> restart, <kbd>F</kbd> flip. Click or drag
-              pieces to move.
+              Shortcuts: <kbd>H</kbd> hint, <kbd>U</kbd> undo, <kbd>R</kbd> restart game, <kbd>F</kbd> flip,{' '}
+              <kbd>N</kbd> next game. Click or drag pieces to move.
             </p>
-          )}
-        </aside>
-      </main>
+          </aside>
+        </main>
+      )}
+
+      {view === 'train' && session.showResults && session.summary && (
+        <Celebration
+          summary={session.summary}
+          onTrainAgain={session.restartSet}
+          onLibrary={() => {
+            session.closeResults()
+            setView('library')
+          }}
+          onClose={session.closeResults}
+        />
+      )}
     </div>
   )
 }
