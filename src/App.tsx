@@ -51,10 +51,13 @@ export default function App() {
         <div className="brand">
           <img className="brand__logo" src={APP_ICON_URL} alt="" width={58} height={58} />
           <div>
-            <h1>Chess Move Trainer</h1>
+            <h1>Pawnlight</h1>
             <p className="brand__tagline">
-              <span aria-hidden="true">{EMOJI.brain}</span> Recover games move by move. Wrong moves are taken back; the
-              answer stays hidden.
+              <span aria-hidden="true">{EMOJI.sparkles}</span> Light up your chess memory.
+            </p>
+            <p className="brand__description">
+              Rebuild the games you study, move by move, and sharpen your tactics with 10,000 puzzles. Wrong moves
+              bounce back; you find the right one yourself.
             </p>
           </div>
         </div>
