@@ -1,7 +1,7 @@
 {
-  "name": "Chess Move Trainer",
-  "short_name": "Chess Trainer",
-  "description": "Replay, recover and memorize chess games move by move.",
+  "name": "Pawnlight",
+  "short_name": "Pawnlight",
+  "description": "Rebuild the games you study, move by move, and sharpen your tactics with 10,000 puzzles. Wrong moves bounce back; you find the right one yourself.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

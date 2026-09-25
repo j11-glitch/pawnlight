@@ -1,9 +1,14 @@
-# Chess Move Trainer
+# Pawnlight
 
-A small browser tool for recovering and memorizing known chess games move by move.
-Pick games from the built-in library (or paste your own), then play every move on the
-board yourself (both sides). Correct moves stay on the board. Wrong moves are taken back
-immediately, and the answer stays hidden unless you ask for a hint.
+*Light up your chess memory.*
+
+Rebuild the games you study, move by move, and sharpen your tactics with 10,000 puzzles.
+Wrong moves bounce back; you find the right one yourself.
+
+Pick games from the built-in library (or paste your own) and play every move on the board.
+Correct moves stay on the board, wrong ones are taken back immediately, and the answer
+stays hidden unless you ask for a hint. In the Puzzles tab the app plays the opponent and
+you find the winning moves.
 
 ## Getting started
 
@@ -202,7 +207,7 @@ Google Fonts.
 ## App icon
 
 Saving the site to a phone's home screen shows the lightbulb-and-pawn icon, labelled
-"Chess Trainer". The source artwork is `assets/icon-source.webp`; the PNGs in `public/`
+"Pawnlight". The source artwork is `assets/icon-source.webp`; the PNGs in `public/`
 (`apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`,
 `favicon-48.png`) and `public/manifest.webmanifest` are what browsers use. After changing
 the artwork, regenerate the PNGs (needs Pillow):

@@ -1,8 +1,8 @@
 {
-  "name": "chess-move-trainer",
+  "name": "pawnlight",
   "private": true,
   "version": "1.0.0",
-  "description": "Replay, recover and memorize a known sequence of chess moves.",
+  "description": "Light up your chess memory: recall games move by move and solve puzzles.",
   "type": "module",
   "scripts": {
     "dev": "vite",

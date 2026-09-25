@@ -22,6 +22,7 @@ export interface SavedSession {
   readonly showHistory: boolean
 }
 
+// Keys keep the app's original name so sessions saved before the rename to Pawnlight survive.
 const STORAGE_KEY = 'chess-move-trainer:session:v2'
 const LEGACY_KEY = 'chess-move-trainer:session:v1'
 
