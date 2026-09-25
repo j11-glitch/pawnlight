@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Chess } from 'chess.js'
-import { buildPosition, getProgress, type MoveAttempt, type Side } from '../chess/gameTrainer'
+import { buildPosition, canUndo, getProgress, type MoveAttempt, type Side } from '../chess/gameTrainer'
 import { loadMoveSequence } from '../chess/moveParser'
 import {
   canAdvance,
@@ -85,6 +85,12 @@ export function useTrainingSession() {
     })
   }, [set, orientation, showHistory])
 
+  /** Puzzles are always shown from the side the user plays. */
+  const faceCurrentPlayer = useCallback((next: TrainingSet) => {
+    const side = getCurrentGame(next).game.playerSide
+    if (side) setOrientation(side === 'w' ? 'white' : 'black')
+  }, [])
+
   const trainer = set?.trainer ?? null
   const position = useMemo(() => (trainer ? buildPosition(trainer) : new Chess()), [trainer])
   const progress = useMemo(() => (trainer ? getProgress(trainer) : null), [trainer])
@@ -93,12 +99,21 @@ export function useTrainingSession() {
     (games: readonly SetGame[], shuffle = false) => {
       const next = createTrainingSet(games, { shuffle })
       setSet(next)
+      faceCurrentPlayer(next)
       setHint(null)
       setShowResults(false)
       const first = getCurrentGame(next)
-      notify('info', games.length === 1 ? `Loaded "${first.title}".` : `Set started: ${games.length} games. First up: "${first.title}".`)
+      const puzzles = first.game.playerSide !== undefined
+      const noun = puzzles ? 'puzzles' : 'games'
+      const intro = puzzles ? `Find the best move for ${first.game.playerSide === 'w' ? 'White' : 'Black'}.` : ''
+      notify(
+        'info',
+        games.length === 1
+          ? `Loaded "${first.title}". ${intro}`.trim()
+          : `Set started: ${games.length} ${noun}. First up: "${first.title}". ${intro}`.trim(),
+      )
     },
-    [notify],
+    [notify, faceCurrentPlayer],
   )
 
   /** Returns true when the move was accepted (the board should keep it). */
@@ -110,12 +125,15 @@ export function useTrainingSession() {
       switch (outcome.kind) {
         case 'correct':
           setHint(null)
+          const puzzle = getCurrentGame(next).game.playerSide !== undefined
           if (!outcome.completed) notify('correct')
           else if (isSetPassed(next)) {
-            notify('completed', next.games.length > 1 ? `${CHECK_MARK} All games completed. Set passed!` : undefined)
+            const all = puzzle ? 'All puzzles solved' : 'All games completed'
+            const single = puzzle ? `${CHECK_MARK} Puzzle solved!` : undefined
+            notify('completed', next.games.length > 1 ? `${CHECK_MARK} ${all}. Set passed!` : single)
             // Celebrate only the transition into "passed", not replays after an undo.
             if (!isSetPassed(set)) setShowResults(true)
-          } else notify('completed')
+          } else notify('completed', puzzle ? `${CHECK_MARK} Puzzle solved!` : undefined)
           return true
         case 'wrong':
           notify('wrong')
@@ -140,7 +158,7 @@ export function useTrainingSession() {
   }, [set, hint])
 
   const undo = useCallback(() => {
-    if (!set || set.trainer.currentMoveIndex === 0) return
+    if (!set || !canUndo(set.trainer)) return
     setSet(undoInSet(set))
     setHint(null)
     notify('info', 'Undid the last move. Play it again.')
@@ -155,19 +173,24 @@ export function useTrainingSession() {
 
   const restartWholeSet = useCallback(() => {
     if (!set) return
-    setSet(restartSet(set))
+    const next = restartSet(set)
+    setSet(next)
+    faceCurrentPlayer(next)
     setHint(null)
     setShowResults(false)
     notify('info', 'Restarted the set from the first game.')
-  }, [set, notify])
+  }, [set, notify, faceCurrentPlayer])
 
   const goToNextGame = useCallback(() => {
     if (!set || !canAdvance(set)) return
     const next = nextGame(set)
     setSet(next)
+    faceCurrentPlayer(next)
     setHint(null)
-    notify('info', `Game ${next.currentGameIndex + 1} of ${next.games.length}: "${getCurrentGame(next).title}".`)
-  }, [set, notify])
+    const current = getCurrentGame(next)
+    const noun = current.game.playerSide ? 'Puzzle' : 'Game'
+    notify('info', `${noun} ${next.currentGameIndex + 1} of ${next.games.length}: "${current.title}".`)
+  }, [set, notify, faceCurrentPlayer])
 
   const openResults = useCallback(() => setShowResults(true), [])
   const closeResults = useCallback(() => setShowResults(false), [])

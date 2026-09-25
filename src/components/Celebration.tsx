@@ -28,8 +28,10 @@ export function Celebration({ summary, onTrainAgain, onLibrary, onClose }: Celeb
     return () => window.removeEventListener('keydown', onKey)
   }, [onClose])
 
-  const { games, moves, mistakes, hints, accuracy, stars } = summary
-  const what = games === 1 ? `the game (${moves} moves)` : `all ${games} games (${moves} moves)`
+  const { games, moves, mistakes, hints, accuracy, stars, puzzles } = summary
+  const noun = puzzles ? 'puzzle' : 'game'
+  const verb = puzzles ? 'solved' : 'recovered'
+  const what = games === 1 ? `the ${noun} (${moves} moves)` : `all ${games} ${noun}s (${moves} moves)`
   const how =
     mistakes === 0 && hints === 0
       ? 'without a single mistake or hint'
@@ -40,15 +42,15 @@ export function Celebration({ summary, onTrainAgain, onLibrary, onClose }: Celeb
       <Confetti />
       <div className="celebration__card">
         <Trophy />
-        <p className="celebration__kicker">{games === 1 ? 'Game completed' : 'Set passed'}</p>
+        <p className="celebration__kicker">{games === 1 ? (puzzles ? 'Puzzle solved' : 'Game completed') : 'Set passed'}</p>
         <h2 id="celebration-title">{HEADLINES[stars]}</h2>
         <Stars count={stars} />
         <p className="celebration__text">
-          You recovered {what} {how}.
+          You {verb} {what} {how}.
         </p>
 
         <dl className="celebration__stats">
-          <Stat label="Games" value={games} />
+          <Stat label={puzzles ? 'Puzzles' : 'Games'} value={games} />
           <Stat label="Moves" value={moves} />
           <Stat label="Accuracy" value={`${accuracy}%`} />
           <Stat label="Hints" value={hints} />

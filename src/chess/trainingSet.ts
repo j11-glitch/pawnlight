@@ -1,5 +1,6 @@
 import {
   attemptMove,
+  countPlayerMoves,
   createTrainer,
   getExpectedMove,
   isCompleted,
@@ -166,13 +167,16 @@ export interface SetSummary {
   readonly accuracy: number
   /** 3 = flawless, 2 = strong, 1 = passed. */
   readonly stars: 1 | 2 | 3
+  /** True when every game in the set is a puzzle. */
+  readonly puzzles: boolean
 }
 
 export function getSetSummary(set: TrainingSet): SetSummary {
-  const moves = set.games.reduce((sum, g) => sum + g.game.moves.length, 0)
+  const moves = set.games.reduce((sum, g) => sum + countPlayerMoves(g.game), 0)
   const mistakes = set.stats.reduce((sum, s) => sum + s.mistakes, 0)
   const hints = set.stats.reduce((sum, s) => sum + s.hints, 0)
   const accuracy = moves + mistakes === 0 ? 100 : Math.round((moves / (moves + mistakes)) * 100)
   const stars = mistakes === 0 && hints === 0 ? 3 : accuracy >= 85 && hints <= set.games.length ? 2 : 1
-  return { games: set.games.length, moves, mistakes, hints, accuracy, stars }
+  const puzzles = set.games.every((g) => g.game.playerSide !== undefined)
+  return { games: set.games.length, moves, mistakes, hints, accuracy, stars, puzzles }
 }

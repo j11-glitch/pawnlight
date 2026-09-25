@@ -1,5 +1,5 @@
 // Built from code points so the source stays ASCII-only.
-const glyph = (...codePoints: number[]) => String.fromCodePoint(...codePoints)
+export const glyph = (...codePoints: number[]) => String.fromCodePoint(...codePoints)
 const VS16 = 0xfe0f // renders the preceding symbol as a colour emoji
 
 export const CHECK_MARK = glyph(0x2713)
@@ -30,4 +30,21 @@ export const EMOJI = {
   keyboard: glyph(0x2328, VS16),
   flag: glyph(0x1f3c1),
   sparkles: glyph(0x2728),
+  puzzle: glyph(0x1f9e9),
 } as const
+
+const keycap = (digit: number) => glyph(0x30 + digit, VS16, 0x20e3)
+
+/** Icon per puzzle category slug (see public/puzzles/index.json). */
+export const PUZZLE_ICONS: Record<string, string> = {
+  'french-defence': glyph(0x1f1eb, 0x1f1f7),
+  'back-rank-mate': glyph(0x1f3f0),
+  'mate-in-1': keycap(1),
+  'mate-in-2': keycap(2),
+  'mate-in-3': keycap(3),
+  fork: glyph(0x1f374),
+  pin: glyph(0x1f4cc),
+  skewer: glyph(0x1f362),
+  'discovered-attack': glyph(0x1f4a5),
+  sacrifice: glyph(0x1f525),
+}
