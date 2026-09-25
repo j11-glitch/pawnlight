@@ -127,6 +127,7 @@ describe('getSetSummary', () => {
       hints: 0,
       accuracy: 100,
       stars: 3,
+      puzzles: false,
     })
   })
 

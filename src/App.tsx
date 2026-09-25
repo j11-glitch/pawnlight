@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useState } from 'react'
-import { getPlayedMoves } from './chess/gameTrainer'
+import { canUndo, getPlayedMoves } from './chess/gameTrainer'
 import type { SetGame } from './chess/trainingSet'
 import { Celebration } from './components/Celebration'
 import { GameControls } from './components/GameControls'
 import { GameStatus } from './components/GameStatus'
 import { LibraryView } from './components/LibraryView'
 import { MoveHistory } from './components/MoveHistory'
+import { PuzzleView } from './components/PuzzleView'
 import { SetOverview } from './components/SetOverview'
 import { TrainerBoard } from './components/TrainerBoard'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
@@ -16,7 +17,7 @@ import { EMOJI } from './symbols'
 // Same image as the home-screen icon (public/icon-192.png); BASE_URL keeps it working on a subpath.
 const APP_ICON_URL = `${import.meta.env.BASE_URL}icon-192.png`
 
-type View = 'library' | 'train'
+type View = 'library' | 'puzzles' | 'train'
 
 const NO_SHORTCUTS = {}
 
@@ -61,13 +62,18 @@ export default function App() {
           <button type="button" aria-current={view === 'library'} onClick={() => setView('library')}>
             <span aria-hidden="true">{EMOJI.library}</span> Library
           </button>
+          <button type="button" aria-current={view === 'puzzles'} onClick={() => setView('puzzles')}>
+            <span aria-hidden="true">{EMOJI.puzzle}</span> Puzzles
+          </button>
           <button type="button" aria-current={view === 'train'} onClick={() => setView('train')} disabled={!set}>
             <span aria-hidden="true">{EMOJI.training}</span> Training
           </button>
         </nav>
       </header>
 
-      {view === 'library' || !set || !trainer ? (
+      {view === 'puzzles' ? (
+        <PuzzleView onStart={handleStart} />
+      ) : view === 'library' || !set || !trainer ? (
         <LibraryView categories={library} orientation={session.orientation} onStart={handleStart} />
       ) : (
         <main className="app__main">
@@ -97,7 +103,7 @@ export default function App() {
 
             <GameControls
               canHint={!completed}
-              canUndo={trainer.currentMoveIndex > 0}
+              canUndo={canUndo(trainer)}
               canRestart
               showHistory={session.showHistory}
               onHint={session.showHint}

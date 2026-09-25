@@ -13,13 +13,14 @@ interface SetOverviewProps {
 export function SetOverview({ set, passed, canAdvance, onNext, onShowResults }: SetOverviewProps) {
   const completed = set.stats.filter((s) => s.completed).length
   const multiple = set.games.length > 1
+  const noun = set.games.every((g) => g.game.playerSide) ? 'Puzzle' : 'Game'
 
   return (
     <section className="card set">
       <header className="set__header">
         <h2>
           <span aria-hidden="true">{EMOJI.target}</span>{' '}
-          {multiple ? `Game ${set.currentGameIndex + 1} of ${set.games.length}` : set.games[0].title}
+          {multiple ? `${noun} ${set.currentGameIndex + 1} of ${set.games.length}` : set.games[0].title}
         </h2>
         {multiple && (
           <span className="muted small">
@@ -51,14 +52,16 @@ export function SetOverview({ set, passed, canAdvance, onNext, onShowResults }: 
 
       {canAdvance && (
         <button type="button" className="primary" onClick={onNext}>
-          <span aria-hidden="true">{EMOJI.next}</span> Next game <kbd>N</kbd>
+          <span aria-hidden="true">{EMOJI.next}</span> Next {noun.toLowerCase()} <kbd>N</kbd>
         </button>
       )}
 
       {passed && (
         <div className="set__passed">
           <strong>
-            <span aria-hidden="true">{EMOJI.trophy}</span> {CHECK_MARK} {multiple ? `Set passed! All ${set.games.length} games completed.` : 'Game completed!'}
+            <span aria-hidden="true">{EMOJI.trophy}</span> {CHECK_MARK} {multiple
+              ? `Set passed! All ${set.games.length} ${noun.toLowerCase()}s ${noun === 'Puzzle' ? 'solved' : 'completed'}.`
+              : `${noun} ${noun === 'Puzzle' ? 'solved' : 'completed'}!`}
           </strong>
           <button type="button" className="primary" onClick={onShowResults}>
             <span aria-hidden="true">{EMOJI.sparkles}</span> See results

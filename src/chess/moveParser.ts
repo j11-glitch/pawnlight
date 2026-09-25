@@ -4,6 +4,11 @@ import { Chess, DEFAULT_POSITION, validateFen } from 'chess.js'
 export interface ParsedGame {
   readonly startFen: string
   readonly moves: readonly string[]
+  /**
+   * Puzzle mode: the side the user plays ('w' or 'b'). The other side's moves are
+   * played automatically. Set with the PGN tag [PlayerSide "white"|"black"].
+   */
+  readonly playerSide?: 'w' | 'b'
 }
 
 export type ParseResult =
@@ -29,7 +34,15 @@ export function loadMoveSequence(input: string): ParseResult {
     return failure('Please paste a move sequence or PGN.')
   }
 
-  const { fen, body } = extractHeaders(input)
+  const { fen, playerSide: sideTag, body } = extractHeaders(input)
+  let playerSide: 'w' | 'b' | undefined
+  if (sideTag !== undefined) {
+    const side = sideTag.toLowerCase()
+    if (side !== 'white' && side !== 'black') {
+      return failure(`Invalid PlayerSide tag "${sideTag}". Use "white" or "black".`)
+    }
+    playerSide = side === 'white' ? 'w' : 'b'
+  }
   let startFen = DEFAULT_POSITION
   if (fen !== undefined) {
     const check = validateFen(fen)
@@ -55,21 +68,24 @@ export function loadMoveSequence(input: string): ParseResult {
     }
   }
 
-  return { ok: true, game: { startFen, moves } }
+  return { ok: true, game: playerSide ? { startFen, moves, playerSide } : { startFen, moves } }
 }
 
 function failure(error: string): ParseResult {
   return { ok: false, error }
 }
 
-/** Removes PGN tag pairs and returns the FEN tag if one is present. */
-function extractHeaders(input: string): { fen?: string; body: string } {
+/** Removes PGN tag pairs and returns the FEN and PlayerSide tags if present. */
+function extractHeaders(input: string): { fen?: string; playerSide?: string; body: string } {
   let fen: string | undefined
+  let playerSide: string | undefined
   const body = input.replace(/^\s*\[\s*(\w+)\s+"([^"]*)"\s*\]\s*$/gm, (_, tag: string, value: string) => {
-    if (tag.toLowerCase() === 'fen') fen = value.trim()
+    const name = tag.toLowerCase()
+    if (name === 'fen') fen = value.trim()
+    if (name === 'playerside') playerSide = value.trim()
     return ''
   })
-  return { fen, body }
+  return { fen, playerSide, body }
 }
 
 function tokenize(body: string): string[] {

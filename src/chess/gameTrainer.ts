@@ -10,6 +10,8 @@ export interface TrainerState {
   readonly startFen: string
   readonly moves: readonly string[]
   readonly currentMoveIndex: number
+  /** Puzzle mode: the user's side. Moves of the other side are played automatically. */
+  readonly playerSide?: 'w' | 'b'
 }
 
 export interface MoveAttempt {
@@ -44,7 +46,34 @@ export interface Progress {
 
 export function createTrainer(game: ParsedGame, currentMoveIndex = 0): TrainerState {
   const index = Math.min(Math.max(0, Math.trunc(currentMoveIndex)), game.moves.length)
-  return { startFen: game.startFen, moves: [...game.moves], currentMoveIndex: index }
+  const state: TrainerState = { startFen: game.startFen, moves: [...game.moves], currentMoveIndex: index }
+  return game.playerSide ? autoAdvance({ ...state, playerSide: game.playerSide }) : state
+}
+
+/** Side to move before the move at `index`, derived from the start position. */
+function sideAt(state: Pick<TrainerState, 'startFen'>, index: number): 'w' | 'b' {
+  const first = state.startFen.split(' ')[1] === 'b' ? 'b' : 'w'
+  return index % 2 === 0 ? first : first === 'w' ? 'b' : 'w'
+}
+
+/** In puzzle mode, plays the opponent's moves until it is the user's turn (or the end). */
+function autoAdvance(state: TrainerState): TrainerState {
+  if (!state.playerSide) return state
+  let index = state.currentMoveIndex
+  while (index < state.moves.length && sideAt(state, index) !== state.playerSide) index++
+  return index === state.currentMoveIndex ? state : { ...state, currentMoveIndex: index }
+}
+
+/** Number of moves the user has to play: all moves, or only their own side's in puzzle mode. */
+export function countPlayerMoves(game: Pick<TrainerState, 'startFen' | 'moves' | 'playerSide'>): number {
+  return countPlayerMovesBefore(game, game.moves.length)
+}
+
+function countPlayerMovesBefore(state: Pick<TrainerState, 'startFen' | 'playerSide'>, index: number): number {
+  if (!state.playerSide) return index
+  let count = 0
+  for (let i = 0; i < index; i++) if (sideAt(state, i) === state.playerSide) count++
+  return count
 }
 
 /** Returns a fresh chess.js instance at the current (last correct) position. */
@@ -84,26 +113,39 @@ export function attemptMove(state: TrainerState, attempt: MoveAttempt): AttemptR
 
   // Both sides of the comparison are chess.js SAN generated from the same position,
   // so string equality is exact (check/mate suffixes, disambiguation, promotion).
-  if (san !== getExpectedMove(state)) {
+  // Like Lichess, a puzzle also accepts any checkmate on its final move.
+  const isLastMove = state.currentMoveIndex === state.moves.length - 1
+  const alternativeMate = state.playerSide !== undefined && isLastMove && chess.isCheckmate()
+  if (san !== getExpectedMove(state) && !alternativeMate) {
     return { state, outcome: { kind: 'wrong', san } }
   }
 
-  const next: TrainerState = { ...state, currentMoveIndex: state.currentMoveIndex + 1 }
+  const next = autoAdvance({ ...state, currentMoveIndex: state.currentMoveIndex + 1 })
   return { state: next, outcome: { kind: 'correct', san, completed: isCompleted(next) } }
 }
 
+/** Takes back the user's last correct move (and, in puzzle mode, the opponent's reply). */
 export function undoMove(state: TrainerState): TrainerState {
-  if (state.currentMoveIndex === 0) return state
-  return { ...state, currentMoveIndex: state.currentMoveIndex - 1 }
+  let index = state.currentMoveIndex - 1
+  if (state.playerSide) {
+    while (index > 0 && sideAt(state, index) !== state.playerSide) index--
+    if (index >= 0 && sideAt(state, index) !== state.playerSide) return state
+  }
+  if (index < 0) return state
+  return { ...state, currentMoveIndex: index }
+}
+
+export function canUndo(state: TrainerState): boolean {
+  return undoMove(state) !== state
 }
 
 export function resetGame(state: TrainerState): TrainerState {
-  return { ...state, currentMoveIndex: 0 }
+  return autoAdvance({ ...state, currentMoveIndex: 0 })
 }
 
 export function getProgress(state: TrainerState): Progress {
-  const total = state.moves.length
-  const completedMoves = state.currentMoveIndex
+  const total = countPlayerMoves(state)
+  const completedMoves = countPlayerMovesBefore(state, state.currentMoveIndex)
   return {
     moveNumber: Math.min(completedMoves + 1, total),
     total,

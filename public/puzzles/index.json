@@ -1,0 +1,475 @@
+{
+  "source": "Lichess puzzle database (CC0), https://database.lichess.org/#puzzles",
+  "categories": [
+    {
+      "slug": "french-defence",
+      "title": "French Defence",
+      "description": "Tactics from French Defence games",
+      "bands": [
+        {
+          "slug": "beginner",
+          "title": "Beginner",
+          "min": 0,
+          "max": 1000,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "casual",
+          "title": "Casual",
+          "min": 1000,
+          "max": 1400,
+          "count": 700,
+          "file": "french-defence/casual.json"
+        },
+        {
+          "slug": "intermediate",
+          "title": "Intermediate",
+          "min": 1400,
+          "max": 1800,
+          "count": 300,
+          "file": "french-defence/intermediate.json"
+        },
+        {
+          "slug": "advanced",
+          "title": "Advanced",
+          "min": 1800,
+          "max": 2200,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "expert",
+          "title": "Expert",
+          "min": 2200,
+          "max": null,
+          "count": 0,
+          "file": null
+        }
+      ]
+    },
+    {
+      "slug": "back-rank-mate",
+      "title": "Back-rank mate",
+      "description": "Mate on the back rank",
+      "bands": [
+        {
+          "slug": "beginner",
+          "title": "Beginner",
+          "min": 0,
+          "max": 1000,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "casual",
+          "title": "Casual",
+          "min": 1000,
+          "max": 1400,
+          "count": 700,
+          "file": "back-rank-mate/casual.json"
+        },
+        {
+          "slug": "intermediate",
+          "title": "Intermediate",
+          "min": 1400,
+          "max": 1800,
+          "count": 300,
+          "file": "back-rank-mate/intermediate.json"
+        },
+        {
+          "slug": "advanced",
+          "title": "Advanced",
+          "min": 1800,
+          "max": 2200,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "expert",
+          "title": "Expert",
+          "min": 2200,
+          "max": null,
+          "count": 0,
+          "file": null
+        }
+      ]
+    },
+    {
+      "slug": "mate-in-1",
+      "title": "Mate in 1",
+      "description": "Find the checkmate in one move",
+      "bands": [
+        {
+          "slug": "beginner",
+          "title": "Beginner",
+          "min": 0,
+          "max": 1000,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "casual",
+          "title": "Casual",
+          "min": 1000,
+          "max": 1400,
+          "count": 700,
+          "file": "mate-in-1/casual.json"
+        },
+        {
+          "slug": "intermediate",
+          "title": "Intermediate",
+          "min": 1400,
+          "max": 1800,
+          "count": 300,
+          "file": "mate-in-1/intermediate.json"
+        },
+        {
+          "slug": "advanced",
+          "title": "Advanced",
+          "min": 1800,
+          "max": 2200,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "expert",
+          "title": "Expert",
+          "min": 2200,
+          "max": null,
+          "count": 0,
+          "file": null
+        }
+      ]
+    },
+    {
+      "slug": "mate-in-2",
+      "title": "Mate in 2",
+      "description": "Force checkmate in two moves",
+      "bands": [
+        {
+          "slug": "beginner",
+          "title": "Beginner",
+          "min": 0,
+          "max": 1000,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "casual",
+          "title": "Casual",
+          "min": 1000,
+          "max": 1400,
+          "count": 700,
+          "file": "mate-in-2/casual.json"
+        },
+        {
+          "slug": "intermediate",
+          "title": "Intermediate",
+          "min": 1400,
+          "max": 1800,
+          "count": 300,
+          "file": "mate-in-2/intermediate.json"
+        },
+        {
+          "slug": "advanced",
+          "title": "Advanced",
+          "min": 1800,
+          "max": 2200,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "expert",
+          "title": "Expert",
+          "min": 2200,
+          "max": null,
+          "count": 0,
+          "file": null
+        }
+      ]
+    },
+    {
+      "slug": "mate-in-3",
+      "title": "Mate in 3",
+      "description": "Force checkmate in three moves",
+      "bands": [
+        {
+          "slug": "beginner",
+          "title": "Beginner",
+          "min": 0,
+          "max": 1000,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "casual",
+          "title": "Casual",
+          "min": 1000,
+          "max": 1400,
+          "count": 700,
+          "file": "mate-in-3/casual.json"
+        },
+        {
+          "slug": "intermediate",
+          "title": "Intermediate",
+          "min": 1400,
+          "max": 1800,
+          "count": 300,
+          "file": "mate-in-3/intermediate.json"
+        },
+        {
+          "slug": "advanced",
+          "title": "Advanced",
+          "min": 1800,
+          "max": 2200,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "expert",
+          "title": "Expert",
+          "min": 2200,
+          "max": null,
+          "count": 0,
+          "file": null
+        }
+      ]
+    },
+    {
+      "slug": "fork",
+      "title": "Fork",
+      "description": "Attack two pieces at once",
+      "bands": [
+        {
+          "slug": "beginner",
+          "title": "Beginner",
+          "min": 0,
+          "max": 1000,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "casual",
+          "title": "Casual",
+          "min": 1000,
+          "max": 1400,
+          "count": 700,
+          "file": "fork/casual.json"
+        },
+        {
+          "slug": "intermediate",
+          "title": "Intermediate",
+          "min": 1400,
+          "max": 1800,
+          "count": 300,
+          "file": "fork/intermediate.json"
+        },
+        {
+          "slug": "advanced",
+          "title": "Advanced",
+          "min": 1800,
+          "max": 2200,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "expert",
+          "title": "Expert",
+          "min": 2200,
+          "max": null,
+          "count": 0,
+          "file": null
+        }
+      ]
+    },
+    {
+      "slug": "pin",
+      "title": "Pin",
+      "description": "Pin a piece to something more valuable",
+      "bands": [
+        {
+          "slug": "beginner",
+          "title": "Beginner",
+          "min": 0,
+          "max": 1000,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "casual",
+          "title": "Casual",
+          "min": 1000,
+          "max": 1400,
+          "count": 700,
+          "file": "pin/casual.json"
+        },
+        {
+          "slug": "intermediate",
+          "title": "Intermediate",
+          "min": 1400,
+          "max": 1800,
+          "count": 300,
+          "file": "pin/intermediate.json"
+        },
+        {
+          "slug": "advanced",
+          "title": "Advanced",
+          "min": 1800,
+          "max": 2200,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "expert",
+          "title": "Expert",
+          "min": 2200,
+          "max": null,
+          "count": 0,
+          "file": null
+        }
+      ]
+    },
+    {
+      "slug": "skewer",
+      "title": "Skewer",
+      "description": "Attack through a valuable piece",
+      "bands": [
+        {
+          "slug": "beginner",
+          "title": "Beginner",
+          "min": 0,
+          "max": 1000,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "casual",
+          "title": "Casual",
+          "min": 1000,
+          "max": 1400,
+          "count": 700,
+          "file": "skewer/casual.json"
+        },
+        {
+          "slug": "intermediate",
+          "title": "Intermediate",
+          "min": 1400,
+          "max": 1800,
+          "count": 300,
+          "file": "skewer/intermediate.json"
+        },
+        {
+          "slug": "advanced",
+          "title": "Advanced",
+          "min": 1800,
+          "max": 2200,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "expert",
+          "title": "Expert",
+          "min": 2200,
+          "max": null,
+          "count": 0,
+          "file": null
+        }
+      ]
+    },
+    {
+      "slug": "discovered-attack",
+      "title": "Discovered attack",
+      "description": "Move one piece to unleash another",
+      "bands": [
+        {
+          "slug": "beginner",
+          "title": "Beginner",
+          "min": 0,
+          "max": 1000,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "casual",
+          "title": "Casual",
+          "min": 1000,
+          "max": 1400,
+          "count": 700,
+          "file": "discovered-attack/casual.json"
+        },
+        {
+          "slug": "intermediate",
+          "title": "Intermediate",
+          "min": 1400,
+          "max": 1800,
+          "count": 300,
+          "file": "discovered-attack/intermediate.json"
+        },
+        {
+          "slug": "advanced",
+          "title": "Advanced",
+          "min": 1800,
+          "max": 2200,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "expert",
+          "title": "Expert",
+          "min": 2200,
+          "max": null,
+          "count": 0,
+          "file": null
+        }
+      ]
+    },
+    {
+      "slug": "sacrifice",
+      "title": "Sacrifice",
+      "description": "Give up material to win more",
+      "bands": [
+        {
+          "slug": "beginner",
+          "title": "Beginner",
+          "min": 0,
+          "max": 1000,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "casual",
+          "title": "Casual",
+          "min": 1000,
+          "max": 1400,
+          "count": 700,
+          "file": "sacrifice/casual.json"
+        },
+        {
+          "slug": "intermediate",
+          "title": "Intermediate",
+          "min": 1400,
+          "max": 1800,
+          "count": 300,
+          "file": "sacrifice/intermediate.json"
+        },
+        {
+          "slug": "advanced",
+          "title": "Advanced",
+          "min": 1800,
+          "max": 2200,
+          "count": 0,
+          "file": null
+        },
+        {
+          "slug": "expert",
+          "title": "Expert",
+          "min": 2200,
+          "max": null,
+          "count": 0,
+          "file": null
+        }
+      ]
+    }
+  ]
+}

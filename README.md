@@ -65,6 +65,32 @@ Passing a set opens a results screen with confetti, a 1-3 star rating and your s
 means at least 85% accuracy and no more hints than games. **Train again** restarts the
 whole set. **See results** on the set panel reopens the screen later.
 
+## Puzzles
+
+The **Puzzles** tab offers 10,000 puzzles picked from the
+[Lichess puzzle database](https://database.lichess.org/#puzzles) (CC0), in ten categories:
+French Defence, Back-rank mate, Mate in 1, 2 and 3, Fork, Pin, Skewer, Discovered attack and
+Sacrifice. Each category has 700 **Casual** (rating 1000-1399) and 300 **Intermediate**
+(1400-1799) puzzles: 7,000 and 3,000 in total. Beginner, Advanced and Expert are shown but
+disabled for now; enable them by giving them a total in `BAND_TOTALS` in the import script.
+
+Pick a category, a difficulty and a set size (5, 10 or 20 random puzzles). In puzzle mode
+the app plays the opponent's moves: the board turns to your side, the opponent's first move
+is shown as the last move, and you play only your own moves. Like on Lichess, any
+checkmate on the final move is accepted. A set is passed when every puzzle is solved.
+
+The puzzles live in `public/puzzles/` as small JSON files (1.2 MB in total) and are downloaded only when you start a set, so the app itself stays small.
+To rebuild them from a fresh download of `lichess_db_puzzle.csv.zst` (needs `zstd`):
+
+```bash
+python3 scripts/import-puzzles.py ~/Downloads/lichess_db_puzzle.csv.zst
+```
+
+Categories, band totals and quality filters are defined at the top of that script.
+
+You can also write your own puzzles as PGN files in `games/`: add a `[FEN "..."]` tag with
+the position before the opponent's move and a `[PlayerSide "white"]` (or `"black"`) tag.
+
 ## Loading your own game
 
 Under **Paste your own game** in the Library tab you can train a game that isn't in the
