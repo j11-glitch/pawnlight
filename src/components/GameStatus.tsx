@@ -1,5 +1,15 @@
 import type { Progress } from '../chess/gameTrainer'
-import type { Feedback } from '../hooks/useTrainingSession'
+import { defaultPieces } from 'react-chessboard'
+import type { Feedback, FeedbackKind } from '../hooks/useTrainingSession'
+import { EMOJI } from '../symbols'
+
+const FEEDBACK_ICONS: Record<FeedbackKind, string> = {
+  correct: EMOJI.checkBox,
+  wrong: EMOJI.crossBox,
+  completed: EMOJI.party,
+  illegal: EMOJI.stop,
+  info: EMOJI.info,
+}
 
 interface GameStatusProps {
   progress: Progress | null
@@ -13,7 +23,9 @@ export function GameStatus({ progress, feedback, hint, isCheckmate, inCheck }: G
   if (!progress) {
     return (
       <section className="status" aria-live="polite">
-        <p className="status__turn">No game loaded</p>
+        <p className="status__turn">
+          <span aria-hidden="true">{EMOJI.book}</span> No game loaded
+        </p>
         <p className="muted">Paste a move sequence or PGN below and press Load game.</p>
       </section>
     )
@@ -23,6 +35,13 @@ export function GameStatus({ progress, feedback, hint, isCheckmate, inCheck }: G
   return (
     <section className="status">
       <p className="status__turn">
+        <span className="status__piece" aria-hidden="true">
+          {progress.completed
+            ? EMOJI.flag
+            : progress.sideToMove === 'white'
+              ? defaultPieces.wK()
+              : defaultPieces.bK()}
+        </span>
         {progress.completed ? 'Finished' : `${turn} to move`}
         {isCheckmate ? <span className="tag">Checkmate</span> : inCheck && <span className="tag">Check</span>}
       </p>
@@ -44,12 +63,15 @@ export function GameStatus({ progress, feedback, hint, isCheckmate, inCheck }: G
       <div className="status__messages" aria-live="polite">
         {feedback && (
           <p key={feedback.id} className={`feedback feedback--${feedback.kind}`}>
-            {feedback.text}
+            <span className="feedback__icon" aria-hidden="true">
+              {FEEDBACK_ICONS[feedback.kind]}
+            </span>
+            <span>{feedback.text}</span>
           </p>
         )}
         {hint && (
           <p className="hint">
-            Hint: <strong>{hint}</strong>
+            <span aria-hidden="true">{EMOJI.bulb}</span> Hint: <strong>{hint}</strong>
           </p>
         )}
       </div>

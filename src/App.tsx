@@ -11,6 +11,8 @@ import { TrainerBoard } from './components/TrainerBoard'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import { useTrainingSession } from './hooks/useTrainingSession'
 import { library } from './library'
+import { defaultPieces } from 'react-chessboard'
+import { EMOJI } from './symbols'
 
 type View = 'library' | 'train'
 
@@ -43,16 +45,24 @@ export default function App() {
   return (
     <div className="app">
       <header className="app__header">
-        <div>
-          <h1>Chess Move Trainer</h1>
-          <p className="muted">Recover games move by move. Wrong moves are taken back; the answer stays hidden.</p>
+        <div className="brand">
+          <span className="brand__logo" aria-hidden="true">
+            {defaultPieces.wN()}
+          </span>
+          <div>
+            <h1>Chess Move Trainer</h1>
+            <p className="brand__tagline">
+              <span aria-hidden="true">{EMOJI.brain}</span> Recover games move by move. Wrong moves are taken back; the
+              answer stays hidden.
+            </p>
+          </div>
         </div>
         <nav className="tabs" aria-label="Views">
           <button type="button" aria-current={view === 'library'} onClick={() => setView('library')}>
-            Library
+            <span aria-hidden="true">{EMOJI.library}</span> Library
           </button>
           <button type="button" aria-current={view === 'train'} onClick={() => setView('train')} disabled={!set}>
-            Training
+            <span aria-hidden="true">{EMOJI.training}</span> Training
           </button>
         </nav>
       </header>
@@ -100,7 +110,7 @@ export default function App() {
             {session.showHistory && <MoveHistory startFen={trainer.startFen} playedMoves={getPlayedMoves(trainer)} />}
 
             <p className="muted small shortcuts">
-              Shortcuts: <kbd>H</kbd> hint, <kbd>U</kbd> undo, <kbd>R</kbd> restart game, <kbd>F</kbd> flip,{' '}
+              <span aria-hidden="true">{EMOJI.keyboard}</span> Shortcuts: <kbd>H</kbd> hint, <kbd>U</kbd> undo, <kbd>R</kbd> restart game, <kbd>F</kbd> flip,{' '}
               <kbd>N</kbd> next game. Click or drag pieces to move.
             </p>
           </aside>

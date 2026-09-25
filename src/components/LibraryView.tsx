@@ -5,6 +5,7 @@ import type { SetGame } from '../chess/trainingSet'
 import type { LibraryCategory, LibraryGame } from '../library'
 import { GameInput } from './GameInput'
 import { GamePreview } from './GamePreview'
+import { EMOJI } from '../symbols'
 
 interface LibraryViewProps {
   categories: readonly LibraryCategory[]
@@ -67,7 +68,10 @@ export function LibraryView({ categories, orientation, onStart }: LibraryViewPro
           return (
             <section key={category.name} className="card category">
               <header className="category__header">
-                <h2>{category.name}</h2>
+                <h2>
+                  <span aria-hidden="true">{EMOJI.book}</span> {category.name}
+                  <span className="category__count">{category.games.length}</span>
+                </h2>
                 <button type="button" className="link" onClick={() => toggle(playable, !allSelected)}>
                   {allSelected ? 'Clear' : 'Select all'}
                 </button>
@@ -102,7 +106,9 @@ export function LibraryView({ categories, orientation, onStart }: LibraryViewPro
         })}
 
         <details className="card custom">
-          <summary>Paste your own game</summary>
+          <summary>
+            <span aria-hidden="true">{EMOJI.pen}</span> Paste your own game
+          </summary>
           <GameInput onLoad={loadCustom} submitLabel="Train this game" />
         </details>
       </div>
@@ -123,7 +129,12 @@ export function LibraryView({ categories, orientation, onStart }: LibraryViewPro
             }}
           />
         ) : (
-          <p className="card muted preview-empty">Click a game title to preview it.</p>
+          <div className="card preview-empty">
+            <span className="preview-empty__icon" aria-hidden="true">
+              {EMOJI.eyes}
+            </span>
+            <p className="muted">Click a game title to preview it.</p>
+          </div>
         )}
       </div>
 
@@ -133,7 +144,7 @@ export function LibraryView({ categories, orientation, onStart }: LibraryViewPro
         </span>
         <label className="checkbox">
           <input type="checkbox" checked={shuffle} onChange={(event) => setShuffle(event.target.checked)} />
-          Shuffle order
+          <span aria-hidden="true">{EMOJI.shuffle}</span> Shuffle order
         </label>
         {selectedGames.length > 0 && (
           <button type="button" className="link" onClick={() => setSelected(new Set())}>
@@ -146,7 +157,7 @@ export function LibraryView({ categories, orientation, onStart }: LibraryViewPro
           disabled={selectedGames.length === 0}
           onClick={() => onStart(selectedGames, shuffle)}
         >
-          Start training
+          <span aria-hidden="true">{EMOJI.target}</span> Start training
         </button>
       </div>
     </div>

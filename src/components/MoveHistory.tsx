@@ -1,4 +1,5 @@
 import { formatMoveList } from '../chess/gameTrainer'
+import { EMOJI } from '../symbols'
 
 interface MoveHistoryProps {
   startFen: string
@@ -10,7 +11,9 @@ export function MoveHistory({ startFen, playedMoves }: MoveHistoryProps) {
   const lines = formatMoveList(startFen, playedMoves)
   return (
     <section className="history">
-      <h2>Move history</h2>
+      <h2>
+        <span aria-hidden="true">{EMOJI.scroll}</span> Move history
+      </h2>
       {lines.length === 0 ? (
         <p className="muted">No moves recovered yet.</p>
       ) : (

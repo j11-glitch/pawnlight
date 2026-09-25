@@ -3,6 +3,8 @@ import { Chessboard } from 'react-chessboard'
 import { buildPosition, createTrainer, getLastMove, numberMoves, type Side } from '../chess/gameTrainer'
 import type { ParsedGame } from '../chess/moveParser'
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts'
+import { DARK_SQUARE_STYLE, LIGHT_SQUARE_STYLE } from './boardTheme'
+import { EMOJI } from '../symbols'
 
 interface GamePreviewProps {
   title: string
@@ -52,8 +54,8 @@ export function GamePreview({ title, subtitle, game, orientation, selected, onTo
             allowDragging: false,
             squareStyles,
             animationDurationInMs: 120,
-            darkSquareStyle: { backgroundColor: 'var(--square-dark)' },
-            lightSquareStyle: { backgroundColor: 'var(--square-light)' },
+            darkSquareStyle: DARK_SQUARE_STYLE,
+            lightSquareStyle: LIGHT_SQUARE_STYLE,
           }}
         />
       </div>
@@ -99,10 +101,10 @@ export function GamePreview({ title, subtitle, game, orientation, selected, onTo
 
       <div className="preview__actions">
         <button type="button" onClick={onToggleSelected} aria-pressed={selected}>
-          {selected ? 'Remove from set' : 'Add to set'}
+          {selected ? 'Remove from set' : `+ Add to set`}
         </button>
         <button type="button" className="primary" onClick={onTrainNow}>
-          Train this game only
+          <span aria-hidden="true">{EMOJI.target}</span> Train this game only
         </button>
       </div>
     </section>

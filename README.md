@@ -170,6 +170,8 @@ src/
 
 React 19, TypeScript, Vite, [chess.js](https://github.com/jhlywa/chess.js),
 [react-chessboard](https://github.com/Clariity/react-chessboard) v5, Vitest.
+Fonts (Playfair Display, Inter) are bundled from Fontsource, so the site makes no calls to
+Google Fonts.
 
 ## Deployment
 
