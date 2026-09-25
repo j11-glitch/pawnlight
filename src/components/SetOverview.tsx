@@ -1,5 +1,5 @@
 import type { TrainingSet } from '../chess/trainingSet'
-import { CHECK_MARK } from '../symbols'
+import { CHECK_MARK, EMOJI } from '../symbols'
 
 interface SetOverviewProps {
   set: TrainingSet
@@ -17,7 +17,10 @@ export function SetOverview({ set, passed, canAdvance, onNext, onShowResults }: 
   return (
     <section className="card set">
       <header className="set__header">
-        <h2>{multiple ? `Game ${set.currentGameIndex + 1} of ${set.games.length}` : set.games[0].title}</h2>
+        <h2>
+          <span aria-hidden="true">{EMOJI.target}</span>{' '}
+          {multiple ? `Game ${set.currentGameIndex + 1} of ${set.games.length}` : set.games[0].title}
+        </h2>
         {multiple && (
           <span className="muted small">
             {completed} / {set.games.length} completed
@@ -48,17 +51,17 @@ export function SetOverview({ set, passed, canAdvance, onNext, onShowResults }: 
 
       {canAdvance && (
         <button type="button" className="primary" onClick={onNext}>
-          Next game <kbd>N</kbd>
+          <span aria-hidden="true">{EMOJI.next}</span> Next game <kbd>N</kbd>
         </button>
       )}
 
       {passed && (
         <div className="set__passed">
           <strong>
-            {CHECK_MARK} {multiple ? `Set passed! All ${set.games.length} games completed.` : 'Game completed!'}
+            <span aria-hidden="true">{EMOJI.trophy}</span> {CHECK_MARK} {multiple ? `Set passed! All ${set.games.length} games completed.` : 'Game completed!'}
           </strong>
           <button type="button" className="primary" onClick={onShowResults}>
-            See results
+            <span aria-hidden="true">{EMOJI.sparkles}</span> See results
           </button>
         </div>
       )}

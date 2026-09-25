@@ -3,6 +3,7 @@ import { Chessboard, type PieceDropHandlerArgs, type SquareHandlerArgs } from 'r
 import type { Chess, Square } from 'chess.js'
 import { getLastMove, isPromotionMove, type MoveAttempt, type Side } from '../chess/gameTrainer'
 import { PromotionPicker } from './PromotionPicker'
+import { DARK_SQUARE_STYLE, LIGHT_SQUARE_STYLE } from './boardTheme'
 
 interface TrainerBoardProps {
   position: Chess
@@ -100,8 +101,8 @@ export function TrainerBoard({ position, orientation, disabled, onMove }: Traine
           onSquareClick: handleSquareClick,
           squareStyles,
           animationDurationInMs: 150,
-          darkSquareStyle: { backgroundColor: 'var(--square-dark)' },
-          lightSquareStyle: { backgroundColor: 'var(--square-light)' },
+          darkSquareStyle: DARK_SQUARE_STYLE,
+          lightSquareStyle: LIGHT_SQUARE_STYLE,
         }}
       />
       {pendingPromotion && <PromotionPicker color={turn} onChoose={choosePromotion} />}
