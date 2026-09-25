@@ -173,6 +173,18 @@ React 19, TypeScript, Vite, [chess.js](https://github.com/jhlywa/chess.js),
 Fonts (Playfair Display, Inter) are bundled from Fontsource, so the site makes no calls to
 Google Fonts.
 
+## App icon
+
+Saving the site to a phone's home screen shows the lightbulb-and-pawn icon, labelled
+"Chess Trainer". The source artwork is `assets/icon-source.webp`; the PNGs in `public/`
+(`apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`,
+`favicon-48.png`) and `public/manifest.webmanifest` are what browsers use. After changing
+the artwork, regenerate the PNGs (needs Pillow):
+
+```bash
+python3 scripts/generate-icons.py
+```
+
 ## Deployment
 
 Every push to `main` runs the tests, builds the app and publishes it to GitHub Pages

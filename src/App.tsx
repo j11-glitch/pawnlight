@@ -11,8 +11,10 @@ import { TrainerBoard } from './components/TrainerBoard'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import { useTrainingSession } from './hooks/useTrainingSession'
 import { library } from './library'
-import { defaultPieces } from 'react-chessboard'
 import { EMOJI } from './symbols'
+
+// Same image as the home-screen icon (public/icon-192.png); BASE_URL keeps it working on a subpath.
+const APP_ICON_URL = `${import.meta.env.BASE_URL}icon-192.png`
 
 type View = 'library' | 'train'
 
@@ -46,9 +48,7 @@ export default function App() {
     <div className="app">
       <header className="app__header">
         <div className="brand">
-          <span className="brand__logo" aria-hidden="true">
-            {defaultPieces.wN()}
-          </span>
+          <img className="brand__logo" src={APP_ICON_URL} alt="" width={58} height={58} />
           <div>
             <h1>Chess Move Trainer</h1>
             <p className="brand__tagline">
