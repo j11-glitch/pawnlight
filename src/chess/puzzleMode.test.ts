@@ -7,6 +7,7 @@ import {
   getExpectedMove,
   getProgress,
   resetGame,
+  startingSide,
   undoMove,
 } from './gameTrainer'
 import { loadMoveSequence } from './moveParser'
@@ -111,5 +112,26 @@ describe('puzzle mode', () => {
     expect(state.currentMoveIndex).toBe(0)
     expect(canUndo(state)).toBe(false)
     expect(canUndo(attemptMove(state, { from: 'e2', to: 'e4' }).state)).toBe(true)
+  })
+})
+
+describe('startingSide', () => {
+  const game = (pgn: string) => {
+    const parsed = loadMoveSequence(pgn)
+    if (!parsed.ok) throw new Error(parsed.error)
+    return parsed.game
+  }
+
+  it('puts White at the bottom for normal games', () => {
+    expect(startingSide(game('e4 e5'))).toBe('white')
+  })
+
+  it('puts Black at the bottom for a game that starts with Black to move', () => {
+    expect(startingSide(game('[FEN "4k3/8/8/8/8/8/8/4K3 b - - 0 1"]\n\nKd7'))).toBe('black')
+  })
+
+  it("puts the user's side at the bottom in a puzzle", () => {
+    expect(startingSide(game(FOOLS_MATE))).toBe('black')
+    expect(startingSide(game('[FEN "6k1/2p2ppp/8/8/8/8/5PPP/RR4K1 b - - 0 1"]\n[PlayerSide "white"]\n\nc6 Ra8#'))).toBe('white')
   })
 })

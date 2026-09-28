@@ -85,6 +85,10 @@ export default function App() {
             orientation={session.orientation}
             disabled={completed}
             onMove={session.makeMove}
+            wrongMove={session.wrongMove}
+            restartLabel={session.isPuzzle ? 'Restart puzzle' : 'Restart game'}
+            onContinue={session.dismissWrongMove}
+            onRestart={session.restartGame}
           />
 
           <aside className="panel">
