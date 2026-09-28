@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Chess } from 'chess.js'
-import { buildPosition, canUndo, getProgress, type MoveAttempt, type Side } from '../chess/gameTrainer'
+import { buildPosition, canUndo, getProgress, startingSide, type MoveAttempt, type Side } from '../chess/gameTrainer'
 import { loadMoveSequence } from '../chess/moveParser'
 import {
   canAdvance,
@@ -53,11 +53,16 @@ export function useTrainingSession() {
   const [saved] = useState(loadSession)
   const [initialSet] = useState(() => restoreSet(saved))
   const [set, setSet] = useState<TrainingSet | null>(initialSet)
-  const [orientation, setOrientation] = useState<Side>(saved?.orientation ?? 'white')
+  // The side that moves first is at the bottom when a game starts; Flip only changes the current view.
+  const [orientation, setOrientation] = useState<Side>(() =>
+    initialSet ? startingSide(getCurrentGame(initialSet).game) : 'white',
+  )
   const [showHistory, setShowHistory] = useState(saved?.showHistory ?? true)
   const [hint, setHint] = useState<string | null>(null)
   const [feedback, setFeedback] = useState<Feedback | null>(null)
   const [showResults, setShowResults] = useState(false)
+  /** The last rejected move, shown as a pop-up on the board until dismissed. */
+  const [wrongMove, setWrongMove] = useState<{ id: number; san: string } | null>(null)
   const feedbackId = useRef(0)
 
   const notify = useCallback((kind: FeedbackKind, text?: string) => {
@@ -85,10 +90,9 @@ export function useTrainingSession() {
     })
   }, [set, orientation, showHistory])
 
-  /** Puzzles are always shown from the side the user plays. */
-  const faceCurrentPlayer = useCallback((next: TrainingSet) => {
-    const side = getCurrentGame(next).game.playerSide
-    if (side) setOrientation(side === 'w' ? 'white' : 'black')
+  /** Turns the board so the side that moves first in the current game or puzzle is at the bottom. */
+  const faceStartingSide = useCallback((next: TrainingSet) => {
+    setOrientation(startingSide(getCurrentGame(next).game))
   }, [])
 
   const trainer = set?.trainer ?? null
@@ -99,8 +103,9 @@ export function useTrainingSession() {
     (games: readonly SetGame[], shuffle = false) => {
       const next = createTrainingSet(games, { shuffle })
       setSet(next)
-      faceCurrentPlayer(next)
+      faceStartingSide(next)
       setHint(null)
+      setWrongMove(null)
       setShowResults(false)
       const first = getCurrentGame(next)
       const puzzles = first.game.playerSide !== undefined
@@ -113,7 +118,7 @@ export function useTrainingSession() {
           : `Set started: ${games.length} ${noun}. First up: "${first.title}". ${intro}`.trim(),
       )
     },
-    [notify, faceCurrentPlayer],
+    [notify, faceStartingSide],
   )
 
   /** Returns true when the move was accepted (the board should keep it). */
@@ -125,6 +130,7 @@ export function useTrainingSession() {
       switch (outcome.kind) {
         case 'correct':
           setHint(null)
+          setWrongMove(null)
           const puzzle = getCurrentGame(next).game.playerSide !== undefined
           if (!outcome.completed) notify('correct')
           else if (isSetPassed(next)) {
@@ -137,6 +143,7 @@ export function useTrainingSession() {
           return true
         case 'wrong':
           notify('wrong')
+          setWrongMove({ id: feedbackId.current, san: outcome.san })
           return false
         case 'illegal':
           notify('illegal')
@@ -161,37 +168,44 @@ export function useTrainingSession() {
     if (!set || !canUndo(set.trainer)) return
     setSet(undoInSet(set))
     setHint(null)
+    setWrongMove(null)
     notify('info', 'Undid the last move. Play it again.')
   }, [set, notify])
 
   const restartGame = useCallback(() => {
     if (!set) return
     setSet(restartCurrentGame(set))
+    faceStartingSide(set)
     setHint(null)
-    notify('info', 'Restarted this game from move 1.')
-  }, [set, notify])
+    setWrongMove(null)
+    const puzzle = getCurrentGame(set).game.playerSide !== undefined
+    notify('info', puzzle ? 'Restarted this puzzle.' : 'Restarted this game from move 1.')
+  }, [set, notify, faceStartingSide])
 
   const restartWholeSet = useCallback(() => {
     if (!set) return
     const next = restartSet(set)
     setSet(next)
-    faceCurrentPlayer(next)
+    faceStartingSide(next)
     setHint(null)
+    setWrongMove(null)
     setShowResults(false)
     notify('info', 'Restarted the set from the first game.')
-  }, [set, notify, faceCurrentPlayer])
+  }, [set, notify, faceStartingSide])
 
   const goToNextGame = useCallback(() => {
     if (!set || !canAdvance(set)) return
     const next = nextGame(set)
     setSet(next)
-    faceCurrentPlayer(next)
+    faceStartingSide(next)
     setHint(null)
+    setWrongMove(null)
     const current = getCurrentGame(next)
     const noun = current.game.playerSide ? 'Puzzle' : 'Game'
     notify('info', `${noun} ${next.currentGameIndex + 1} of ${next.games.length}: "${current.title}".`)
-  }, [set, notify, faceCurrentPlayer])
+  }, [set, notify, faceStartingSide])
 
+  const dismissWrongMove = useCallback(() => setWrongMove(null), [])
   const openResults = useCallback(() => setShowResults(true), [])
   const closeResults = useCallback(() => setShowResults(false), [])
   const flip = useCallback(() => setOrientation((o) => (o === 'white' ? 'black' : 'white')), [])
@@ -206,6 +220,9 @@ export function useTrainingSession() {
     showHistory,
     hint,
     feedback,
+    wrongMove,
+    dismissWrongMove,
+    isPuzzle: set ? getCurrentGame(set).game.playerSide !== undefined : false,
     passed: set ? isSetPassed(set) : false,
     summary: set ? getSetSummary(set) : null,
     showResults,

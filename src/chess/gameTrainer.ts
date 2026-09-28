@@ -216,3 +216,13 @@ export function formatMoveList(startFen: string, moves: readonly string[]): stri
     white ? [`${number}.`, white.san, black?.san].filter(Boolean).join(' ') : `${number}... ${black?.san}`,
   )
 }
+
+/**
+ * Board side to show at the bottom: the side that moves first.
+ * For a puzzle that is the side the user plays; for a game it is the side to move in the
+ * start position (White for normal games, Black if the [FEN] has Black to move).
+ */
+export function startingSide(game: ParsedGame): Side {
+  const side = game.playerSide ?? (game.startFen.split(' ')[1] === 'b' ? 'b' : 'w')
+  return side === 'w' ? 'white' : 'black'
+}

@@ -80,9 +80,9 @@ Sacrifice. Each category has 700 **Casual** (rating 1000-1399) and 300 **Interme
 disabled for now; enable them by giving them a total in `BAND_TOTALS` in the import script.
 
 Pick a category, a difficulty and a set size (5, 10 or 20 random puzzles). In puzzle mode
-the app plays the opponent's moves: the board turns to your side, the opponent's first move
-is shown as the last move, and you play only your own moves. Like on Lichess, any
-checkmate on the final move is accepted. A set is passed when every puzzle is solved.
+the app plays the opponent's moves: the board turns so the side you play is at the bottom,
+the opponent's first move is shown as the last move, and you play only your own moves. Like on Lichess, any checkmate on the final move is accepted.
+A set is passed when every puzzle is solved.
 
 The puzzles live in `public/puzzles/` as small JSON files (1.2 MB in total) and are downloaded only when you start a set, so the app itself stays small.
 To rebuild them from a fresh download of `lichess_db_puzzle.csv.zst` (needs `zstd`):
@@ -125,7 +125,8 @@ while you train.
 - Drag a piece, or click it and then click a highlighted target square.
 - **Correct**: the move stays and you continue with the next move.
 - **Wrong**: the move is taken back, the board stays at the last correct position,
-  and you see *Wrong move. Try again.*
+  and a pop-up on the board says which move was wrong. Choose **Continue** to try
+  again from the same position, or **Restart game** (**Restart puzzle** in puzzle mode).
 - **Illegal**: the piece snaps back.
 - When a pawn promotes, a picker asks which piece. Picking the wrong piece counts as a
   wrong move.

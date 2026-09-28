@@ -3,6 +3,7 @@ import { Chessboard, type PieceDropHandlerArgs, type SquareHandlerArgs } from 'r
 import type { Chess, Square } from 'chess.js'
 import { getLastMove, isPromotionMove, type MoveAttempt, type Side } from '../chess/gameTrainer'
 import { PromotionPicker } from './PromotionPicker'
+import { WrongMovePopup } from './WrongMovePopup'
 import { DARK_SQUARE_STYLE, LIGHT_SQUARE_STYLE } from './boardTheme'
 
 interface TrainerBoardProps {
@@ -11,6 +12,11 @@ interface TrainerBoardProps {
   disabled: boolean
   /** Returns true when the move was accepted. */
   onMove: (attempt: MoveAttempt) => boolean
+  /** The last rejected move; while set, a pop-up covers the board. */
+  wrongMove: { id: number; san: string } | null
+  restartLabel: string
+  onContinue: () => void
+  onRestart: () => void
 }
 
 const LAST_MOVE_STYLE: CSSProperties = { backgroundColor: 'rgba(255, 214, 10, 0.42)' }
@@ -26,7 +32,16 @@ const CAPTURE_TARGET_STYLE: CSSProperties = {
 }
 
 /** Chessboard with drag-and-drop and click-to-move, highlights and a promotion picker. */
-export function TrainerBoard({ position, orientation, disabled, onMove }: TrainerBoardProps) {
+export function TrainerBoard({
+  position,
+  orientation,
+  disabled,
+  onMove,
+  wrongMove,
+  restartLabel,
+  onContinue,
+  onRestart,
+}: TrainerBoardProps) {
   const fen = position.fen()
   // Selection and pending promotion are tied to the position they were made in,
   // so they disappear automatically whenever the position changes.
@@ -48,12 +63,12 @@ export function TrainerBoard({ position, orientation, disabled, onMove }: Traine
   }
 
   function handleDrop({ sourceSquare, targetSquare }: PieceDropHandlerArgs): boolean {
-    if (disabled || !targetSquare) return false
+    if (disabled || wrongMove || !targetSquare) return false
     return tryMove(sourceSquare as Square, targetSquare as Square)
   }
 
   function handleSquareClick({ square, piece }: SquareHandlerArgs) {
-    if (disabled || pendingPromotion) return
+    if (disabled || wrongMove || pendingPromotion) return
     const clicked = square as Square
     if (selected && targets.some((move) => move.to === clicked)) {
       tryMove(selected, clicked)
@@ -95,7 +110,7 @@ export function TrainerBoard({ position, orientation, disabled, onMove }: Traine
           id: 'trainer-board',
           position: fen,
           boardOrientation: orientation,
-          allowDragging: !disabled && !pendingPromotion,
+          allowDragging: !disabled && !pendingPromotion && !wrongMove,
           canDragPiece: ({ piece }) => piece.pieceType[0] === turn,
           onPieceDrop: handleDrop,
           onSquareClick: handleSquareClick,
@@ -106,6 +121,15 @@ export function TrainerBoard({ position, orientation, disabled, onMove }: Traine
         }}
       />
       {pendingPromotion && <PromotionPicker color={turn} onChoose={choosePromotion} />}
+      {wrongMove && !pendingPromotion && (
+        <WrongMovePopup
+          key={wrongMove.id}
+          san={wrongMove.san}
+          restartLabel={restartLabel}
+          onContinue={onContinue}
+          onRestart={onRestart}
+        />
+      )}
     </div>
   )
 }
