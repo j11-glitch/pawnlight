@@ -1,0 +1,7 @@
+[Event "Ruy Lopez: Quick Attack"]
+[Site "Hamar"]
+[Date "2026.09.04"]
+[Opening "Ruy Lopez: Steinitz Defence, Nxc7+ fork"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 d6 4. d4 exd4 5. Nxd4 Bd7 6. Nc3 Nxd4 7. Qxd4 Bxb5
+8. Nxb5 Nf6 9. e5 dxe5 10. Qxe5+ Qe7 11. Nxc7+ *

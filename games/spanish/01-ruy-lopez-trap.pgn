@@ -1,0 +1,7 @@
+[Event "Ruy Lopez Trap"]
+[Site "Hamar"]
+[Date "2026.09.04"]
+[Opening "Ruy Lopez: ...Bg4-h5, Nxe5! and Bxf7+ wins back the queen"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 d6 5. O-O b5 6. Bb3 Bg4 7. h3 Bh5
+8. Nxe5 Bxd1 9. Bxf7+ Ke7 10. Nxc6+ Kxf7 11. Nxd8+ Rxd8 12. Rxd1 *
