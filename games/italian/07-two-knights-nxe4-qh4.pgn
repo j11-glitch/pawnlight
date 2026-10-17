@@ -1,0 +1,6 @@
+[Event "Two Knights: Nxe4 and Qh4"]
+[Opening "Italian Game: Two Knights, Knight Attack, 4... Nxe4 5. Nxf7 Qh4"]
+[Result "0-1"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 Nxe4 5. Nxf7 Qh4 6. O-O Bc5 7. Qf3 Nd4
+8. Qd1 d5 9. Bxd5 Bg4 10. f3 Nxf3+ 11. Kh1 Qxh2# 0-1
