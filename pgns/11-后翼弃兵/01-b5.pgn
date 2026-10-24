@@ -1,0 +1,8 @@
+[Event "变例1"]
+[Variation "3...b5 4.a4"]
+[Opening "Queen's Gambit Accepted"]
+[Site "Hamar"]
+[Date "2026.08.12"]
+[Result "*"]
+
+1. d4 d5 2. c4 dxc4 3. e3 b5 4. a4 c6 5. axb5 cxb5 6. Qf3! Nc6 7. Qxc6+ Bd7 *

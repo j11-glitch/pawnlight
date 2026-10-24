@@ -1,0 +1,8 @@
+[Event "变例1"]
+[Variation "4...Nxd4 5.Qxd4"]
+[Opening "Scotch Game"]
+[Site "Wuhan"]
+[Date "2026.03.25"]
+[Result "*"]
+
+1. e4 e5 2. Nf3 Nc6 3. d4 exd4 4. Nxd4 Nxd4 5. Qxd4 Nf6 6. e5 Nh5 7. g4 *

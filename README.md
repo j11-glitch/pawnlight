@@ -59,6 +59,27 @@ Drop a `.pgn` file into a folder under `games/` and commit it. `npm test` checks
 every file in the library is valid, so a broken PGN fails the build before it is
 deployed. Locally, `npm run dev` picks up new files after a page reload.
 
+## PGN tab
+
+The **PGN** tab shows score sheets from the [`pgns/`](pgns/) folder as a numbered,
+two-column move list. Pick a category on the left, then a game.
+
+```text
+pgns/
+  01-双马防御/
+    01-nxd5-ke8.pgn
+  02-对付双马/
+    01-nxd4-bxf7.pgn
+```
+
+- **Category** = folder name; leading numbers only control the order.
+- **Title** = `White vs Black` when both tags are set, otherwise the `[Event]` tag. The
+  `[Variation]` tag (or `[Opening]`) shows underneath.
+- Move annotations such as `!`, `?` and `?!` are kept.
+- Files within a category are numbered by difficulty (fewest moves first).
+
+`npm test` checks that every file in `pgns/` is a valid PGN.
+
 ## Training sets
 
 A training set is the list of games you started together. You **pass** the set by

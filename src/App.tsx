@@ -6,6 +6,7 @@ import { GameControls } from './components/GameControls'
 import { GameStatus } from './components/GameStatus'
 import { LibraryView } from './components/LibraryView'
 import { MoveHistory } from './components/MoveHistory'
+import { PgnView } from './components/PgnView'
 import { PuzzleView } from './components/PuzzleView'
 import { SetOverview } from './components/SetOverview'
 import { TrainerBoard } from './components/TrainerBoard'
@@ -17,7 +18,7 @@ import { EMOJI } from './symbols'
 // Same image as the home-screen icon (public/icon-192.png); BASE_URL keeps it working on a subpath.
 const APP_ICON_URL = `${import.meta.env.BASE_URL}icon-192.png`
 
-type View = 'library' | 'puzzles' | 'train'
+type View = 'library' | 'puzzles' | 'train' | 'pgn'
 
 const NO_SHORTCUTS = {}
 
@@ -71,10 +72,15 @@ export default function App() {
           <button type="button" aria-current={view === 'train'} onClick={() => setView('train')} disabled={!set}>
             <span aria-hidden="true">{EMOJI.training}</span> Training
           </button>
+          <button type="button" aria-current={view === 'pgn'} onClick={() => setView('pgn')}>
+            <span aria-hidden="true">{EMOJI.scroll}</span> PGN
+          </button>
         </nav>
       </header>
 
-      {view === 'puzzles' ? (
+      {view === 'pgn' ? (
+        <PgnView />
+      ) : view === 'puzzles' ? (
         <PuzzleView onStart={handleStart} />
       ) : view === 'library' || !set || !trainer ? (
         <LibraryView categories={library} orientation={session.orientation} onStart={handleStart} />
