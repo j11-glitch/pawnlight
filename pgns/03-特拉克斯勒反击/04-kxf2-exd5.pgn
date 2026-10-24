@@ -1,0 +1,6 @@
+[Event "变例4"]
+[Variation "6.Kf1 Qe7 7.Kxf2 9.exd5"]
+[Opening "Two Knights Defence, Traxler Counterattack"]
+[Result "*"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 Bc5 5. Nxf7 Bxf2+ 6. Kf1 Qe7 7. Kxf2 Rf8 8. d3 d5 9. exd5 Ng4+ 10. Ke1 Qxf7 11. Qf3 Qg6 12. Qg3 Nd4 13. Bb3 Rf2 14. h3 Re2+ 15. Kd1 Nf2+ *

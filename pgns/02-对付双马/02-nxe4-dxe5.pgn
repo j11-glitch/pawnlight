@@ -1,0 +1,6 @@
+[Event "变例2"]
+[Variation "4...Nxe4 5.dxe5"]
+[Opening "Two Knights Defence, 4.d4"]
+[Result "*"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. d4 Nxe4 5. dxe5 Bc5 6. Qd5 Bxf2+ 7. Ke2 O-O 8. Qxe4 Bb6 *

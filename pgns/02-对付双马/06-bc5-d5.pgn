@@ -1,0 +1,6 @@
+[Event "变例6"]
+[Variation "意大利次序 4.O-O Nf6 5.d4 6...d5"]
+[Opening "Two Knights Defence, 4.d4"]
+[Result "*"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. O-O Nf6 5. d4 exd4 6. e5 d5 7. exf6 dxc4 8. Re1+ Be6 9. Ng5 Qxf6 10. Nxe6 fxe6 11. Qh5+ *

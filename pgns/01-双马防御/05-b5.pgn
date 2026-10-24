@@ -1,0 +1,8 @@
+[Event "b5变例"]
+[Variation "4...d5 5.exd5 b5"]
+[Opening "Two Knights Defence, 4.Ng5"]
+[Site "Wuhan"]
+[Date "2026.03.24"]
+[Result "*"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 d5 5. exd5 b5 6. Bxb5 Qxd5 7. Bxc6+ Qxc6 8. O-O Bb7 9. f3 h6 10. Nh3 Bc5+ 11. Nf2 Ng4 *

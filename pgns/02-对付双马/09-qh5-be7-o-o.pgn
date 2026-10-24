@@ -1,0 +1,6 @@
+[Event "变例9"]
+[Variation "8...Qh5 9...Be7 10...O-O 闪击得象"]
+[Opening "Two Knights Defence, 4.d4"]
+[Result "*"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. d4 exd4 5. O-O Nxe4 6. Re1 d5 7. Bxd5 Qxd5 8. Nc3 Qh5 9. Nxe4 Be7 10. Bg5 O-O 11. Ng3 Qg6 12. Bxe7 Nxe7 13. Rxe7 *

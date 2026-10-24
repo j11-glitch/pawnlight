@@ -1,0 +1,6 @@
+[Event "变例14"]
+[Variation "4...exd4 6...Ne4 8...f5"]
+[Opening "Two Knights Defence, 4.d4"]
+[Result "1-0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. d4 exd4 5. O-O Bc5 6. e5 Ne4? 7. Re1 d5 8. exd6 f5 9. dxc7 Qxc7 10. Nbd2 Be7 11. Nxe4 fxe4 12. Rxe4 Bf5 13. Ng5 Bxe4? 14. Bf7+ Kd7 15. Qg4+ Kd6 16. Nxe4+ Ke5 17. Qe6# 1-0

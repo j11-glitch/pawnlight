@@ -9,4 +9,5 @@ const relativeFiles = Object.fromEntries(
 
 export const library = buildLibrary(relativeFiles)
 
+export { humanize } from './gameLibrary'
 export type { LibraryCategory, LibraryGame } from './gameLibrary'
