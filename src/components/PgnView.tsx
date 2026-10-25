@@ -1,16 +1,11 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Chess } from 'chess.js'
 import { humanize } from '../library'
 import { EMOJI } from '../symbols'
+import { PgnPopup, type MovePair, type PgnGame } from './PgnPopup'
 
 // Every .pgn file under /pgns is bundled at build time, one subfolder per category.
 const files = import.meta.glob<string>('../../pgns/*/*.pgn', { query: '?raw', import: 'default', eager: true })
-
-interface MovePair {
-  number: number
-  white: string
-  black?: string
-}
 
 /** chess.js drops "!?"-style annotations, so read them from the movetext, one per move in order. */
 function moveAnnotations(pgn: string): string[] {
@@ -24,7 +19,7 @@ function moveAnnotations(pgn: string): string[] {
     .map((token) => token.match(/[?!]+$/)?.[0] ?? '')
 }
 
-function parsePgn(pgn: string, id: string) {
+function parsePgn(pgn: string, id: string): PgnGame {
   const chess = new Chess()
   chess.loadPgn(pgn)
   const annotations = moveAnnotations(pgn)
@@ -49,7 +44,7 @@ function parsePgn(pgn: string, id: string) {
 }
 
 function buildGroups() {
-  const byFolder = new Map<string, ReturnType<typeof parsePgn>[]>()
+  const byFolder = new Map<string, PgnGame[]>()
   const paths = Object.keys(files).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
   for (const path of paths) {
     const [folder, fileName] = path.split('/').slice(-2)
@@ -62,10 +57,12 @@ const GROUPS = buildGroups()
 const ALL_GAMES = GROUPS.flatMap((g) => g.games)
 
 export function PgnView() {
-  const [selectedId, setSelectedId] = useState(ALL_GAMES[0].id)
+  // Nothing is open at first; clicking a game opens it in a popup.
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   // Categories start collapsed; the user opens the ones they want.
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set())
-  const game = ALL_GAMES.find((g) => g.id === selectedId) ?? ALL_GAMES[0]
+  const game = ALL_GAMES.find((g) => g.id === selectedId)
+  const closePopup = useCallback(() => setSelectedId(null), [])
 
   function toggleGroup(name: string) {
     setExpanded((current) => {
@@ -103,11 +100,11 @@ export function PgnView() {
                 {open && (
                   <ul className="category__games pgn__games">
                     {group.games.map((entry) => (
-                      <li key={entry.id} className={`game-row${entry.id === game.id ? ' game-row--active' : ''}`}>
+                      <li key={entry.id} className={`game-row${entry.id === selectedId ? ' game-row--active' : ''}`}>
                         <button
                           type="button"
                           className="game-row__title"
-                          aria-current={entry.id === game.id}
+                          aria-haspopup="dialog"
                           onClick={() => setSelectedId(entry.id)}
                         >
                           <span>{entry.title}</span>
@@ -124,22 +121,7 @@ export function PgnView() {
         </ul>
       </section>
 
-      <section className="card">
-        <h2 className="pgn__title">
-          <span aria-hidden="true">{EMOJI.scroll}</span> {game.title}
-        </h2>
-        {game.details && <p className="muted">{game.details}</p>}
-        <ol className="pgn__moves">
-          {game.pairs.map((pair) => (
-            <li key={pair.number}>
-              <span className="pgn__number">{pair.number}.</span>
-              <span>{pair.white}</span>
-              <span>{pair.black ?? ''}</span>
-            </li>
-          ))}
-        </ol>
-        {game.result && <p className="pgn__result">{game.result}</p>}
-      </section>
+      {game && <PgnPopup game={game} onClose={closePopup} />}
     </main>
   )
 }

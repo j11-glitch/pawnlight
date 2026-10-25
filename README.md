@@ -61,8 +61,9 @@ deployed. Locally, `npm run dev` picks up new files after a page reload.
 
 ## PGN tab
 
-The **PGN** tab shows score sheets from the [`pgns/`](pgns/) folder as a numbered,
-two-column move list. Pick a category on the left, then a game.
+The **PGN** tab lists score sheets from the [`pgns/`](pgns/) folder by category. Click a
+game to open it in a popup as a numbered, two-column move list; close it with the ✕
+button, <kbd>Esc</kbd> or a click outside.
 
 ```text
 pgns/
