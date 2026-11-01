@@ -1,0 +1,6 @@
+[Event "变例7"]
+[Variation "5...Nxd4 6.Nxe5 O-O 7.Be3 Ne6"]
+[Opening "Italian Game, 5...Nxd4"]
+[Result "*"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. O-O Nf6 5. d4 Nxd4 6. Nxe5 O-O 7. Be3 Ne6 8. Bxe6 Bxe3 9. Bxf7+ Kh8 10. Bb3 Bb6 11. Nf7+ Rxf7 12. Bxf7 *
