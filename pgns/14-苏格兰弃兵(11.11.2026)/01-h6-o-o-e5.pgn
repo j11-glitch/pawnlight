@@ -1,0 +1,6 @@
+[Event "变例1"]
+[Variation "4.Bc4 h6 5.O-O Bc5 6.c3"]
+[Opening "Scotch Gambit"]
+[Result "*"]
+
+1. e4 e5 2. Nf3 Nc6 3. d4 exd4 4. Bc4 h6 5. O-O Bc5 6. c3 dxc3 7. Bxf7+ Kxf7 8. Qd5+ Ke8 9. Qxc5 cxb2 10. Bxb2 Nf6 11. e5 *

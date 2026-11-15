@@ -1,0 +1,6 @@
+[Event "变例2"]
+[Variation "4.f3 exf3 5.Nxf3 Bg4 11...Nd7"]
+[Opening "Caro-Kann: Rasa-Studier Gambit"]
+[Result "1-0"]
+
+1. e4 c6 2. d4 d5 3. Nc3 dxe4 4. f3 exf3 5. Nxf3 Bg4 6. h3 Bh5 7. g4 Bg6 8. h4 h6 9. Ne5 Bh7 10. Bc4 e6 11. Qe2 Nd7 12. Nxf7 Kxf7 13. Qxe6# 1-0
